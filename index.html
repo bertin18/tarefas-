@@ -53,12 +53,13 @@
 
     .nova-tarefa-form {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr 170px auto;
       gap: 12px;
       margin-bottom: 12px;
     }
 
-    input[type="text"] {
+    input[type="text"],
+    input[type="date"] {
       width: 100%;
       border: 1px solid #d1d5db;
       border-radius: 10px;
@@ -68,7 +69,8 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    input[type="text"]:focus {
+    input[type="text"]:focus,
+    input[type="date"]:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.2);
     }
@@ -108,6 +110,17 @@
 
     .tarefa-descricao {
       overflow-wrap: anywhere;
+    }
+
+    .tarefa-textos {
+      display: grid;
+      gap: 3px;
+    }
+
+    .tarefa-meta {
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      font-weight: 600;
     }
 
     .tarefa-concluida .tarefa-descricao {
@@ -165,7 +178,7 @@
 
     .edicao-area {
       display: grid;
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: 1fr 170px auto auto;
       gap: 8px;
       width: 100%;
     }
@@ -216,6 +229,11 @@
         placeholder="Digite uma nova tarefa"
         autocomplete="off"
         aria-label="Descricao da tarefa"
+      />
+      <input
+        id="data-tarefa"
+        type="date"
+        aria-label="Data de vencimento da tarefa"
       />
       <button type="submit">Adicionar</button>
     </form>

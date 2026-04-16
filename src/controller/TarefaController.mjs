@@ -7,14 +7,15 @@ export class TarefaController {
     this.tarefas = this.service.buscarTodas().map((tarefa) => this.#normalizar(tarefa));
   }
 
-  adicionarTarefa(descricao) {
+  adicionarTarefa(descricao, dataVencimento = null) {
     const textoNormalizado = String(descricao ?? "").trim();
 
     if (!textoNormalizado) {
       throw new Error("Digite uma descricao valida para a tarefa.");
     }
 
-    const novaTarefa = new Tarefa(textoNormalizado);
+    const dataNormalizada = this.#normalizarData(dataVencimento);
+    const novaTarefa = new Tarefa(textoNormalizado, dataNormalizada);
     this.tarefas.push(novaTarefa);
     this.#persistir();
 
@@ -32,16 +33,32 @@ export class TarefaController {
       throw new Error("Tarefa nao encontrada.");
     }
 
-    const novaDescricao = String(novosDados?.descricao ?? "").trim();
+    const descricaoFoiInformada = Object.prototype.hasOwnProperty.call(novosDados ?? {}, "descricao");
+    const dataFoiInformada = Object.prototype.hasOwnProperty.call(novosDados ?? {}, "dataVencimento");
 
-    if (!novaDescricao) {
-      throw new Error("A descricao da tarefa nao pode ficar vazia.");
+    if (!descricaoFoiInformada && !dataFoiInformada) {
+      throw new Error("Informe ao menos um campo para atualizar.");
+    }
+
+    let novaDescricao = null;
+    if (descricaoFoiInformada) {
+      novaDescricao = String(novosDados?.descricao ?? "").trim();
+      if (!novaDescricao) {
+        throw new Error("A descricao da tarefa nao pode ficar vazia.");
+      }
     }
 
     const tarefaAtual = this.tarefas[indice];
+    let novaDataVencimento = tarefaAtual.dataVencimento ?? null;
+
+    if (dataFoiInformada) {
+      novaDataVencimento = this.#normalizarData(novosDados?.dataVencimento);
+    }
+
     this.tarefas[indice] = {
       ...tarefaAtual,
-      descricao: novaDescricao
+      descricao: descricaoFoiInformada ? novaDescricao : tarefaAtual.descricao,
+      dataVencimento: novaDataVencimento
     };
 
     this.#persistir();
@@ -89,7 +106,19 @@ export class TarefaController {
     return {
       id: tarefa?.id ?? Tarefa.gerarIdUnico(),
       descricao: String(tarefa?.descricao ?? "").trim(),
+      dataVencimento: this.#normalizarData(tarefa?.dataVencimento, false),
       concluida: Boolean(tarefa?.concluida)
     };
+  }
+
+  #normalizarData(dataVencimento, lancarErro = true) {
+    try {
+      return Tarefa.normalizarData(dataVencimento);
+    } catch (erro) {
+      if (lancarErro) {
+        throw erro;
+      }
+      return null;
+    }
   }
 }
