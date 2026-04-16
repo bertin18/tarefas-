@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRUD de Tarefas - MVC</title>
+  <style>
+    :root {
+      --bg-page: linear-gradient(160deg, #eef6ff 0%, #f8fff3 100%);
+      --bg-card: #ffffff;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --accent: #0f766e;
+      --accent-dark: #0b5a54;
+      --danger: #b91c1c;
+      --danger-dark: #991b1b;
+      --border: #e5e7eb;
+      --success-bg: #dcfce7;
+      --success-text: #166534;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text-main);
+      background: var(--bg-page);
+      display: grid;
+      place-items: center;
+    }
+
+    .app {
+      width: min(760px, 100%);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
+      padding: 28px;
+    }
+
+    .app h1 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 1.9rem;
+      text-align: center;
+    }
+
+    .nova-tarefa-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.2);
+    }
+
+    .mensagem {
+      min-height: 24px;
+      margin-bottom: 14px;
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    .lista-tarefas {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .tarefa-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background-color: #fbfdff;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .tarefa-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .tarefa-descricao {
+      overflow-wrap: anywhere;
+    }
+
+    .tarefa-concluida .tarefa-descricao {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .acoes {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 0.92rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: #fff;
+      background-color: var(--accent);
+      transition: transform 0.08s ease, filter 0.2s ease;
+    }
+
+    button:hover {
+      filter: brightness(0.95);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .btn-secundario {
+      background-color: #4b5563;
+    }
+
+    .btn-remover {
+      background-color: var(--danger);
+    }
+
+    .btn-remover:hover {
+      background-color: var(--danger-dark);
+    }
+
+    .status-vazio {
+      border: 1px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      color: var(--text-muted);
+      background: #f8fafc;
+    }
+
+    .edicao-area {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .feedback-sucesso {
+      color: var(--success-text);
+      background: var(--success-bg);
+      border-radius: 8px;
+      padding: 4px 8px;
+      display: inline-block;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 16px;
+      }
+
+      .app {
+        padding: 18px;
+      }
+
+      .nova-tarefa-form {
+        grid-template-columns: 1fr;
+      }
+
+      .tarefa-item {
+        grid-template-columns: 1fr;
+      }
+
+      .acoes {
+        justify-content: flex-start;
+      }
+
+      .edicao-area {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1>Gerenciador de Tarefas</h1>
+
+    <form id="nova-tarefa-form" class="nova-tarefa-form">
+      <input
+        id="descricao-tarefa"
+        type="text"
+        placeholder="Digite uma nova tarefa"
+        autocomplete="off"
+        aria-label="Descricao da tarefa"
+      />
+      <button type="submit">Adicionar</button>
+    </form>
+
+    <p id="mensagem" class="mensagem" aria-live="polite"></p>
+
+    <ul id="lista-tarefas" class="lista-tarefas"></ul>
+  </main>
+
+  <script type="module" src="./main.mjs"></script>
+</body>
+</html>

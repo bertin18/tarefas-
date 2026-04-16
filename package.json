@@ -1,0 +1,6 @@
+{
+  "name": "crud-tarefas-mvc",
+  "version": "1.0.0",
+  "description": "Aplicacao CRUD de tarefas em JavaScript puro com arquitetura MVC e persistencia em localStorage.",
+  "type": "module"
+}
